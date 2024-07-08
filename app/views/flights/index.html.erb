@@ -15,3 +15,23 @@
 <br><br>
   <%= form.submit 'Search', class: 'btn btn-primary' %>
 <% end %>
+
+<% if @flights.present? %>
+  <hr>
+  <h3>Select a Flight: </h3>    
+  <%= form_with url: new_booking_path, method: :get, local:true do |form| %>
+    <%= form.hidden_field :passengers, value: params[:passengers] %>
+    <% @flights.each do |flight|%>
+        <%= form.radio_button :flight_id, flight.id %> 
+        <%= form.label :flight_id, flight.start_datetime.strftime("%H:%M")%>            
+    <% end %>
+
+    <br><br>
+    <%= form.submit "Next"%>
+  <% end %>
+
+<% else %>
+    <hr>
+    <p>No Flights Found</p>
+
+<% end %>
