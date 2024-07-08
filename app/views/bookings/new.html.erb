@@ -1,18 +1,27 @@
 <h2>Booking Page</h2>
 
-Flight From <%= @flight.departure_airport.code %> to <%= @flight.arrival_airport.code%> <br>
-Date <%= @flight.start_datetime.strftime("%d %b, %Y")%>
-Flight Id <%= @flight.id %>
+Flight From <%= @flight.departure_airport.code %> to <%= @flight.arrival_airport.code %> <br>
+Date <%= @flight.start_datetime.strftime("%d %b, %Y") %> <br>
+Flight ID <%= @flight.id %>
 
-<h3>Personal Information </h3>
+<h3>Personal Information</h3>
 
 <%= form_for @booking do |f| %>
-  <%= f.fields_for :passengers do |passenger_builder|%>
-    <%= passenger_builder.label :name %>
-    <%= passenger_builder.text_field :name %> <br><br>
-    <%= passenger_builder.label :email %>
-    <%= passenger_builder.text_field :email %>
+  <%= f.hidden_field :flight_id %>
+
+  <% @num_passengers.times do |index| %>
+    <% passenger = @booking.passengers[index] %>
+    <%= f.fields_for :passengers, passenger do |passenger_fields| %>
+      <div class="passenger-fields">
+        <%= passenger_fields.label :name, "Passenger#{index + 1} Name: " %>
+        <%= passenger_fields.text_field :name %>
+
+        <%= passenger_fields.label :email, "Passenger#{index + 1} Email: " %>
+        <%= passenger_fields.text_field :email %>
+      </div>
+    <% end %>
+    <br><br> <!-- Add spacing between each passenger's fields -->
   <% end %>
-  <br><br>
-  <%= f.submit %>
+
+  <%= f.submit "Create Booking" %>
 <% end %>

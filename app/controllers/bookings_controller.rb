@@ -1,8 +1,17 @@
 class BookingsController < ApplicationController
   def new
     @flight = Flight.find(params[:flight_id])
-    @booking = Booking.new(flight: @flight, num_passengers: params[:passengers].to_i)
-    @passengers = Array.new(@booking.num_passengers) { Passenger.new }
+    @booking = Booking.new(flight_id: @flight.id)
+    @num_passengers = params[:passengers].to_i
+
+    #build passengers according to num_passengers
+    @passengers = @num_passengers.times { @booking.passengers.build }
+    # debugger
+     # Build additional fields for each passenger
+    # @booking.passengers.each do |passenger|
+    #   passenger.build_user_credentials
+    # end
+
   end
 
   def show
@@ -12,11 +21,18 @@ class BookingsController < ApplicationController
   def create
     @booking = Booking.new(booking_params)
     
+    if @booking.save
+      redirect_to booking_path(@booking)
+    else
+      @flight = Flight.find(params[:booking][:flight_id])
+      render :new
+    end
+
   end
 
 
   private
   def booking_params 
-    params.require(:booking).permit(:flight_id,:num_passengers)
+    params.require(:booking).permit(:flight_id,passengers_attributes: [:id,  :name, :email])
   end
 end
