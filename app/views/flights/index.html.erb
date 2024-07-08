@@ -1,0 +1,17 @@
+<h1>Flights Search</h1>
+
+<%= form_with url: flights_path, method: :get, local: true do |form| %>
+  <%= form.label :departure_airport_id, 'Departure Airport' %>
+  <%= form.select :departure_airport_id, @departure_airports.map { |airport| [airport.code, airport.id] }, { include_blank: true }, { class: 'form-control' } %>
+    <br><br>
+  <%= form.label :arrival_airport_id, 'Arrival Airport' %>
+  <%= form.select :arrival_airport_id, @arrival_airports.map { |airport| [airport.code, airport.id] }, { include_blank: true }, { class: 'form-control' } %>
+    <br><br>
+  <%= form.label :start_datetime, 'Flight Date' %>
+  <%= form.select :start_datetime, @flight_dates %>
+    <br><br>
+  <%= form.label :passengers, 'Number of Passengers' %>
+  <%= form.select :passengers, @passengers, { class: 'form-control' } %>
+<br><br>
+  <%= form.submit 'Search', class: 'btn btn-primary' %>
+<% end %>
