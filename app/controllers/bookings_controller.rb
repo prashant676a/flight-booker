@@ -22,6 +22,7 @@ class BookingsController < ApplicationController
     @booking = Booking.new(booking_params)
     
     if @booking.save
+      @booking.passengers.each { |passenger| PassengerMailer.with(passenger: passenger).confirm_email.deliver_later }
       redirect_to booking_path(@booking)
     else
       @flight = Flight.find(params[:booking][:flight_id])
